@@ -31,7 +31,7 @@ export default {
     MOBILE_NUMBER:"Mobile number",
     CHOOSE_LANGUAGE:"Choose Langauge",
     CHOOSE_THEME:"Choose theme",
-    ENTER_THE_FOUR_DIGIT:"Enter the 4-digit code sent to you at",
+    ENTER_THE_FOUR_DIGIT:"Enter the 4-digit code sent to you at ",
     EDIT_MY_EMAIL:"Edit my email",
     RESEND_CODE:"Resend code",
     VERIFY:"Verify",

@@ -1,6 +1,6 @@
 //import liraries
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, I18nManager } from 'react-native';
 import navigationStrings from '../../Navigation/navigationStrings';
 import { saveUserData } from '../../redux/reducers/auth';
 import store from '../../redux/store';
@@ -14,8 +14,11 @@ import ButtonComp from '../../Components/ButtonComp';
 import TextComp from '../../Components/TextComp';
 import { useSelector } from 'react-redux';
 import ModalComp from '../../Components/ModalComp';
-import { changeLang, changeTheme } from '../../redux/reducers/appSettings';
 import LeftTextRightImage from '../../Components/LeftTextRightImage';
+import { langData } from '../../constants/langtheme/langData';
+import { themeData } from '../../constants/langtheme/themeData';
+import RNRestart from 'react-native-restart'; // Import package from node modules
+import { changeAppTheme, changeLanguage } from '../../redux/actions/appSettings';
 const { dispatch } = store;
 
 
@@ -23,8 +26,7 @@ const { dispatch } = store;
 const InitialScreen = ({ navigation }) => {
     const [isVisible, setIsVisible] = useState(false)
 
-    const isDark = useSelector(state => state?.appSettings?.isDark)
-    const lang = useSelector(state => state?.appSettings?.lang)
+    const {selectedTheme, lang} = useSelector(state => state?.appSettings)
 
     const onLogin = () => {
         dispatch(saveUserData({ isLogin: true }))
@@ -32,24 +34,35 @@ const InitialScreen = ({ navigation }) => {
 
     const privacyPolicy = (type = 1) => {
         if (type == 1) {
-            alert("Terms")
+            navigation.navigate(navigationStrings.WEB_VIEW, {type})
         } else {
-            alert("Privacy")
-
+            navigation.navigate(navigationStrings.WEB_VIEW, {type})
         }
     }
 
-    const onPressLang = (lang) => {
-        dispatch(changeLang(lang))
+    const onPressLang = (lan) => {
         setIsVisible(false)
+        if (lan == 'ar' && lang !== lan  ) {
+            changeLanguage(lan)
+            setTimeout(()=>{
+                I18nManager.forceRTL(true)
+                RNRestart.restart();
+            }, 400)
+        } else if (lang !== lan ) {
+            changeLanguage(lan)
+            setTimeout(()=>{
+                I18nManager.forceRTL(false)
+                RNRestart.restart();
+            }, 400)
+        }
     }
 
     const onPressTheme = (theme) => {
-        dispatch(changeTheme(theme))
+        changeAppTheme(theme)
         setIsVisible(false)
     }
-    return (
 
+    return (
         <WrapperContainer>
             <View style={{ flex: 1, padding: moderateScale(16), alignItems: 'center' }}>
                 <TouchableOpacity
@@ -57,12 +70,12 @@ const InitialScreen = ({ navigation }) => {
                     onPress={() => setIsVisible(true)}
                     style={{
                         ...styles.circularStyle,
-                        backgroundColor: isDark ? colors.white : colors.gray2
+                        backgroundColor: selectedTheme == 'dark' ? colors.white : colors.gray2
                     }} >
                     <Text
                         style={{
                             ...styles.textStyle,
-                            color: isDark ? colors.black : colors.white
+                            color: selectedTheme == 'dark' ? colors.black : colors.white
                         }}  >{lang}</Text>
                 </TouchableOpacity>
                 <View style={{ flex: 0.3, justifyContent: 'center' }}>
@@ -71,8 +84,8 @@ const InitialScreen = ({ navigation }) => {
 
                 <View style={{ flex: 0.7, justifyContent: 'flex-end' }}>
                     <TextComp style={{ marginVertical: moderateScaleVertical(42) }} text={strings.BY_CLICKING}>
-                        <Text onPress={() => privacyPolicy(1)} >{strings.TERMS}</Text>,
-                        {strings.LEARN_HOW_WE} <Text onPress={() => privacyPolicy(2)} >{strings.PRIVACY_POLICY} </Text>  </TextComp>
+                        <Text  style={{color: colors.blueColor}} onPress={() => privacyPolicy(1)} >{strings.TERMS}</Text>,
+                        {strings.LEARN_HOW_WE} <Text  style={{color: colors.blueColor}} onPress={() => privacyPolicy(2)} >{strings.PRIVACY_POLICY} </Text>  </TextComp>
 
                     <ButtonComp
                         onPress={() => navigation.navigate(navigationStrings.LOGIN)}
@@ -80,19 +93,19 @@ const InitialScreen = ({ navigation }) => {
                     <TextComp style={{ marginVertical: moderateScaleVertical(16), alignSelf: 'center' }} text={strings.OR} ></TextComp>
 
                     <ButtonComp
-                        style={{ backgroundColor: isDark ? colors.white : colors.gray4 }}
+                        style={{ backgroundColor: selectedTheme == 'dark'  ? colors.white : colors.gray4 }}
                         textStyle={{ color: colors.black }}
                         text={strings.LOG_IN_WITH_GOOGLE}
                         leftImg={imagePath.icGoogle} />
 
                     <ButtonComp
-                        style={{ backgroundColor: isDark ? colors.white : colors.gray4, marginVertical: moderateScaleVertical(16) }}
+                        style={{ backgroundColor: selectedTheme == 'dark'  ? colors.white : colors.gray4, marginVertical: moderateScaleVertical(16) }}
                         textStyle={{ color: colors.black }}
                         text={strings.LOG_IN_WITH_FACEBOOK}
                         leftImg={imagePath.icFacebook} />
 
                     <ButtonComp
-                        style={{ backgroundColor: isDark ? colors.white : colors.gray4 }}
+                        style={{ backgroundColor: selectedTheme == 'dark'  ? colors.white : colors.gray4 }}
                         textStyle={{ color: colors.black }}
                         text={strings.LOG_IN_WITH_APPLE}
                         leftImg={imagePath.icApple} />
@@ -116,28 +129,33 @@ const InitialScreen = ({ navigation }) => {
 
                         <Text style={styles.headingStyle} >{strings.CHOOSE_LANGUAGE} </Text>
 
-                        <LeftTextRightImage
-                            text='English'
-                            isSelected={lang == 'en'}
-                            onPress={() => onPressLang('en')} />
+                        {
+                            langData.map((val, i) =>{
+                                return(
+                                    <LeftTextRightImage 
+                                    key={String(i)}
+                                    text={val.title}
+                                    isSelected={lang == val.code}
+                                    onPress={()=>onPressLang(val.code) } />
+                                )
+                            } )
+                        }
 
-                        <LeftTextRightImage
-                            text='Arabic'
-                            isSelected={lang == 'ar'}
-                            onPress={() => onPressLang('ar')} />
 
                         <Text style={{...styles.headingStyle, marginTop:moderateScaleVertical(16) }} >{strings.CHOOSE_THEME} </Text>
 
-                        <LeftTextRightImage
-                            text='Dark'
-                            isSelected={isDark}
-                            onPress={() => onPressTheme(true)} />
 
-                        <LeftTextRightImage
-                            text='Light'
-                            isSelected={!isDark}
-                            onPress={() => onPressTheme(false)} />
-
+                        {
+                            themeData.map((val, i) =>{
+                                return(
+                                    <LeftTextRightImage 
+                                    key={String(i)}
+                                    text={val.title}
+                                    isSelected={val.code == selectedTheme}
+                                    onPress={()=>onPressTheme(val.code) } />
+                                )
+                            } )
+                        }
 
 
                     </View>

@@ -14,11 +14,13 @@ const TextComp = ({
     ...props
 }) => {
 
-    const isDarkTheme = useSelector(state=>state?.appSettings?.isDark )
-    // const isDarkTheme = false
+    const {selectedTheme} = useSelector(state=>state?.appSettings )
 return (
         <Text
-            style={{...styles.textStyle,...style, color: isDarkTheme ? colors.white: colors.black }}
+            style={{
+                ...styles.textStyle,
+                ...style, 
+                color: selectedTheme == 'dark' ? colors.white: colors.black }}
             {...props}
         >{text} {children}</Text>
     );
@@ -29,6 +31,7 @@ const styles = StyleSheet.create({
         fontFamily: fontFamily.regular,
         color: colors.white,
         fontSize: textScale(12),
+        textAlign: 'left'
     },
 });
 

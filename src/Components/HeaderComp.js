@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 const HeaderComp = ({
     onPressLeft,
 }) => {
-    const isDarkTheme = useSelector(state=>state?.appSettings?.isDark )
+    const {selectedTheme} = useSelector(state=>state?.appSettings )
     const navigation = useNavigation()
     
     return (
@@ -20,7 +20,7 @@ const HeaderComp = ({
             <TouchableOpacity
             onPress={!!onPressLeft? onPressLeft: () =>navigation.goBack() }>
                 <Image 
-                style={{...styles.headerStyle, tintColor: isDarkTheme? colors.white: colors.black}}
+                style={{...styles.headerStyle, tintColor: selectedTheme == 'dark'? colors.white: colors.black}}
                 source={imagePath.icBack} />
             </TouchableOpacity>
         </View>
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     headerStyle: {
         height: 25,
         width: 25,
-        tintColor: colors.white
     }
 });
 

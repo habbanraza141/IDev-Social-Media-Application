@@ -8,5 +8,7 @@ export default {
     CREATEPOST: "CreatePost",
     NOTIFICATION: "Notification",
     PROFILE: "Profile",
-    TABROUTES: "TabRoutes"
+    TABROUTES: "TabRoutes",
+    OTP_VERIFICATION: "OtpVerification",
+    WEB_VIEW: "Webview"
 }

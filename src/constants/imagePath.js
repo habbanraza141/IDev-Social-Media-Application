@@ -17,5 +17,7 @@ export default{
     icApple: require('../assets/images/apple.png'),
     icBack: require('../assets/images/arrow_back.png'),
     icRadio: require('../assets/images/radio.png'),
-    icRadio2: require('../assets/images/radio2.png')
+    icRadio2: require('../assets/images/radio2.png'),
+    icShare: require('../assets/images/icdirection.png'),
+    icEdit: require('../assets/images/icdots.png'),
 }

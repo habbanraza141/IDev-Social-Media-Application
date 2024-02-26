@@ -3,15 +3,15 @@ import { createSlice } from '@reduxjs/toolkit'
 const appSettingSlice = createSlice({
     name: 'appSettings',
     initialState: {
-      lang: 'ar',
-      isDark: true
+      lang: 'en',
+      selectedTheme: 'dark'
     },
     reducers: {
       changeLang: (state, action) => {
        state.lang = action.payload;
       },
       changeTheme: (state, action) => {
-       state.isDark = action.payload;
+       state.selectedTheme = action.payload;
       },
     },
     

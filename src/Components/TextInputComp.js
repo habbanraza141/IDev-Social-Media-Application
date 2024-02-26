@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { moderateScale, moderateScaleVertical, textScale } from '../styles/responsiveSize';
 import fontFamily from '../styles/fontFamily';
 import colors from '../styles/colors';
+import { useSelector } from 'react-redux';
 
 // create a component
 const TextInputComp = ({
@@ -18,6 +19,8 @@ const TextInputComp = ({
     ...props
 }) => {
 
+    const { lang} = useSelector(state => state?.appSettings)
+
     return (
         <View
             style={{
@@ -26,7 +29,10 @@ const TextInputComp = ({
 
             <TextInput 
             style={{ 
-                ...styles.textStyle, ...textStyle }}
+                ...styles.textStyle, ...textStyle, 
+                textAlign: 
+                lang == 'ar'? 'right': 'left' 
+            }}
                 value={value}
                 onChangeText={onChangeText}
                 placeholder={placeholder}

@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import colors from '../styles/colors';
 import { useSelector } from 'react-redux';
 
@@ -9,10 +9,10 @@ const WrapperContainer = ({
     style = {},
     children
 }) => {
-    const isDarkTheme = useSelector(state=>state?.appSettings?.isDark )
-    // const isDarkTheme = false
+    const {selectedTheme} = useSelector(state=>state?.appSettings )
     return (
-        <View style={{ ...styles.container, ...style, backgroundColor: isDarkTheme? colors.themeColor: colors.white }}>
+        <View style={{ ...styles.container, ...style, backgroundColor: selectedTheme == 'dark' ? colors.themeColor: colors.white }}>
+            <StatusBar barStyle={selectedTheme == 'dark' ? 'light-content': 'dark-content' }></StatusBar>
             <SafeAreaView style={{flex: 1}} >
                 {children}
             </SafeAreaView>

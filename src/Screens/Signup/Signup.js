@@ -10,9 +10,11 @@ import fontFamily from '../../styles/fontFamily';
 import ButtonComp from '../../Components/ButtonComp';
 import HeaderComp from '../../Components/HeaderComp';
 import TextComp from '../../Components/TextComp';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import navigationStrings from '../../Navigation/navigationStrings';
 
 // create a component
-const Signup = () => {
+const Signup = ({navigation}) => {
     const [userName, setUserName] = useState('')
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
@@ -20,57 +22,62 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [secureText, setSecureText] = useState(true)
 
+    const onPressSignup = () => {
+        navigation.navigate(navigationStrings.OTP_VERIFICATION)
+    }
     return (
         <WrapperContainer>
             <HeaderComp />
-            <View style={{ flex: 1, padding: moderateScale(16) }} >
-                <View style={{ flex: 0.8 }} >
-                    <TextComp style={styles.headerStyle} text={strings.CREATE_NEW_ACCOUNT} > </TextComp>
-                    <TextComp style={styles.descStyle} text={strings.CREATE_AN_ACCOUNT_SO_YOU_CAN_CONTINUE} > </TextComp>
+            <KeyboardAwareScrollView>
+                <View style={{  padding: moderateScale(16) }} >
+                    <View  >
+                        <TextComp style={styles.headerStyle} text={strings.CREATE_NEW_ACCOUNT} > </TextComp>
+                        <TextComp style={styles.descStyle} text={strings.CREATE_AN_ACCOUNT_SO_YOU_CAN_CONTINUE} > </TextComp>
 
-                    <TextInputComp
-                        value={userName}
-                        placeholder={strings.USERNAME}
-                        onChangeText={(value) => setUserName(value) }
-                    />
-                    <TextInputComp
-                        value={fullName}
-                        placeholder={strings.FULL_NAME}
-                        onChangeText={(value) => setFullName(value) }
-                    />
+                        <TextInputComp
+                            value={userName}
+                            placeholder={strings.USERNAME}
+                            onChangeText={(value) => setUserName(value)}
+                        />
+                        <TextInputComp
+                            value={fullName}
+                            placeholder={strings.FULL_NAME}
+                            onChangeText={(value) => setFullName(value)}
+                        />
 
-                    <TextInputComp
-                        value={email}
-                        placeholder={strings.EMAIL}
-                        onChangeText={(value)=>setEmail(value)}
-                    />
+                        <TextInputComp
+                            value={email}
+                            placeholder={strings.EMAIL}
+                            onChangeText={(value) => setEmail(value)}
+                        />
 
-                    <TextInputComp
-                        value={password}
-                        placeholder={strings.PASSWORD}
-                        onChangeText={(value)=>setPassword(value)}
-                        secureTextEntry={secureText}
-                        secureText={secureText ? strings.SHOW : strings.HIDE}
-                        onPressSecure={() => setSecureText(!secureText)} 
-                    />
+                        <TextInputComp
+                            value={password}
+                            placeholder={strings.PASSWORD}
+                            onChangeText={(value) => setPassword(value)}
+                            secureTextEntry={secureText}
+                            secureText={secureText ? strings.SHOW : strings.HIDE}
+                            onPressSecure={() => setSecureText(!secureText)}
+                        />
 
-                    <TextInputComp
-                        value={confirmPassword}
-                        placeholder={strings.CONFIRM_PASSWORD}
-                        onChangeText={(value)=>setConfirmPassword(value)}
-                        secureTextEntry={secureText}
-                        secureText={secureText ? strings.SHOW : strings.HIDE}
-                        onPressSecure={() => setSecureText(!secureText)} 
-                    />
+                        <TextInputComp
+                            value={confirmPassword}
+                            placeholder={strings.CONFIRM_PASSWORD}
+                            onChangeText={(value) => setConfirmPassword(value)}
+                            secureTextEntry={secureText}
+                            secureText={secureText ? strings.SHOW : strings.HIDE}
+                            onPressSecure={() => setSecureText(!secureText)}
+                        />
 
 
 
+                    </View>
+                        <ButtonComp
+                            onPress={onPressSignup}
+                            style={{marginVertical: moderateScaleVertical(52)}}
+                            text={strings.SIGN_UP} />
                 </View>
-                <View style={{ flex: 0.2, justifyContent: 'flex-end' }} >
-                    <ButtonComp
-                        text={strings.NEXT} />
-                </View>
-            </View>
+            </KeyboardAwareScrollView>
         </WrapperContainer>
     );
 };

@@ -22,6 +22,16 @@ export default function (Stack) {
                 component={Screens.Signup}
                 options={{ headerShown: false }}
             />
+            <Stack.Screen
+                name={navigationStrings.OTP_VERIFICATION}
+                component={Screens.OtpVerification}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name={navigationStrings.WEB_VIEW}
+                component={Screens.Webview}
+                options={{ headerShown: false }}
+            />
 
         </>
     );
