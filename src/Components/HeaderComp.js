@@ -1,28 +1,58 @@
 //import liraries
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { moderateScale } from '../styles/responsiveSize';
+import { moderateScale, textScale } from '../styles/responsiveSize';
 import imagePath from '../constants/imagePath';
 import colors from '../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import TextComp from './TextComp';
+import fontFamily from '../styles/fontFamily';
 
 
 // create a component
 const HeaderComp = ({
     onPressLeft,
+    leftText = '',
+    isLeftImage = true,
+    style = {},
+    rightTextStyle = {},
+    rightText = '',
+    onPressRight = () => { },
+    rightImage = null
 }) => {
     const {selectedTheme} = useSelector(state=>state?.appSettings )
     const navigation = useNavigation()
     
     return (
-        <View style={styles.container}>
-            <TouchableOpacity
-            onPress={!!onPressLeft? onPressLeft: () =>navigation.goBack() }>
-                <Image 
-                style={{...styles.headerStyle, tintColor: selectedTheme == 'dark'? colors.white: colors.black}}
-                source={imagePath.icBack} />
-            </TouchableOpacity>
+        <View style={{ ...styles.container, ...style }}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {isLeftImage ? 
+                <TouchableOpacity
+                    style={{ marginRight: moderateScale(16) }}
+                    onPress={!!onPressLeft ? onPressLeft : () => navigation.goBack()}
+                >
+                    <Image style={{ tintColor: selectedTheme == 'dark' ? colors.whiteColor : colors.blackColor,    height: 20, width: 20, }} source={imagePath.icBack} />
+                </TouchableOpacity> : null}
+
+                {!!leftText ? <TextComp style={styles.textStyle} text={leftText} /> : null}
+            </View>
+
+            {!!rightText ?
+                <TouchableOpacity
+                    onPress={onPressRight}
+                >
+                    <TextComp style={{ ...styles.textStyle, ...rightTextStyle }}>{rightText}</TextComp>
+                </TouchableOpacity> : null}
+
+            {!!rightImage ?
+                <TouchableOpacity
+                    onPress={onPressRight}
+                >
+                    <Image style={{ tintColor: selectedTheme == 'dark' ? colors.whiteColor : colors.blackColor }} source={rightImage} />
+                </TouchableOpacity> : null}
+
         </View>
     );
 };
@@ -33,12 +63,14 @@ const styles = StyleSheet.create({
         height: moderateScale(42),
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         paddingHorizontal: moderateScale(16)
     },
+    textStyle: {
+        fontSize: textScale(16),
+        fontFamily: fontFamily.medium,
 
-    headerStyle: {
-        height: 25,
-        width: 25,
+
     }
 });
 

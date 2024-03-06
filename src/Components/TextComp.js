@@ -19,8 +19,8 @@ return (
         <Text
             style={{
                 ...styles.textStyle,
-                ...style, 
-                color: selectedTheme == 'dark' ? colors.white: colors.black }}
+                color: selectedTheme == 'dark' ? colors.white: colors.black,
+                ...style }}
             {...props}
         >{text} {children}</Text>
     );

@@ -15,6 +15,7 @@ export default {
     redOpacity06: 'rgba(224, 32, 32, 0.06)',
     redOpacity20: 'rgba(224, 32, 32, 0.2)',
     black: 'rgba(20,19,19,1)',
+    blackColor: 'rgba(20,19,19,1)',
     blackOpacity10: 'rgba(0,0,0,0.1)',
     blackOpacity12: 'rgba(0,0,0,0.12)',
     blackOpacity15: 'rgba(0,0,0,0.15)',
@@ -28,7 +29,14 @@ export default {
     blackOpacity90: 'rgba(0,0,0,0.9)',
 
     white: '#FFFFFFFF',
+    whiteColor: '#FFFFFFFF',
+    whiteOpacity10: 'rgba(255, 255, 255, 0.1)',
+    whiteOpacity20: 'rgba(255, 255, 255, 0.2)',
+    whiteOpacity30: 'rgba(255, 255, 255, 0.3)',
+    whiteOpacity40: 'rgba(255, 255, 255, 0.4)',
     whiteOpacity50: 'rgba(255, 255, 255, 0.5)',
+    whiteOpacity60: 'rgba(255, 255, 255, 0.6)',
+    whiteOpacity80: 'rgba(255, 255, 255, 0.8)',
     whiteOpacity70: 'rgba(255, 255, 255, 0.7)',
  
 }

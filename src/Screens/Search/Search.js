@@ -6,6 +6,7 @@ import WrapperContainer from '../../Components/WrapperContainer';
 import { FlashList } from '@shopify/flash-list';
 import { height, moderateScale, width } from '../../styles/responsiveSize';
 import colors from '../../styles/colors';
+import SearchBar from '../../Components/SearchBar';
 
 // create a component
 const Search = () => {
@@ -29,11 +30,14 @@ const Search = () => {
         <WrapperContainer >
 
             <View style={{ flex: 1}} >
+                <SearchBar
+                    placeholder='Search...'
+                    inputStyle={{ marginHorizontal: moderateScale(8) }} />
                 <FlashList
                     data={[{ title: 'ansas' }, { title: 'ansas' }, { title: 'ansas' }, { title: 'ansas' }]}
                     numColumns={3}
                     renderItem={renderItem}
-                    estimatedItemSize={width/3}
+                    estimatedItemSize={width/2}
                 // ItemSeparatorComponent={() => <View style={{ height: moderateScale(20) }} />}
                 />
             </View>

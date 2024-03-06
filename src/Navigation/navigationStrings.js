@@ -10,5 +10,11 @@ export default {
     PROFILE: "Profile",
     TABROUTES: "TabRoutes",
     OTP_VERIFICATION: "OtpVerification",
-    WEB_VIEW: "Webview"
+    WEB_VIEW: "Webview",
+    PROFILE_EDIT:"ProfileEdit",
+    LINKS:"Links",
+    ADD_POST:"AddPost",
+    POST_DETAIL:"PostDetail",
+    CHATS:"Chats",
+    MESSAGES:"Messages"
 }
