@@ -34,7 +34,7 @@ const Search = () => {
                     placeholder='Search...'
                     inputStyle={{ marginHorizontal: moderateScale(8) }} />
                 <FlashList
-                    data={[{ title: 'ansas' }, { title: 'ansas' }, { title: 'ansas' }, { title: 'ansas' }]}
+                    data={[{ }, { }, { }, { },{ }, { }, { }, { }, { }, { }, { }, { }]}
                     numColumns={3}
                     renderItem={renderItem}
                     estimatedItemSize={width/2}
