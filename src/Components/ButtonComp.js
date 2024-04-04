@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import colors from '../styles/colors';
 import fontFamily from '../styles/fontFamily';
 import { moderateScale, textScale } from '../styles/responsiveSize';
@@ -12,7 +12,8 @@ const ButtonComp = ({
     text,
     textStyle,
     style = {},
-    leftImg
+    leftImg,
+    isLoading = false
 }
 
 ) => {
@@ -24,7 +25,12 @@ const ButtonComp = ({
             onPress={onPress}>
 
             {!!leftImg? <Image style={{height: moderateScale(25), width: moderateScale(25)}} source={leftImg} />: <View /> }
-            <Text style={{...styles.textStyle,...textStyle}} >{text}</Text>
+            
+            {isLoading? 
+            <ActivityIndicator size={'small'} color={'white'} /> :
+            <Text style={{...styles.textStyle,...textStyle}} >{text}</Text>}
+            
+                
             <View />
 
         </TouchableOpacity>

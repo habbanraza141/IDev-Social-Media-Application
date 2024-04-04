@@ -4,18 +4,26 @@ import { View, Text, StyleSheet, KeyboardAvoidingView, Keyboard, Platform, Touch
 import WrapperContainer from '../../Components/WrapperContainer';
 import { moderateScale, moderateScaleVertical, textScale } from '../../styles/responsiveSize';
 import strings from '../../constants/lang';
-import TextInputComp from '../../Components/TextInputComp';
 import colors from '../../styles/colors';
 import fontFamily from '../../styles/fontFamily';
 import ButtonComp from '../../Components/ButtonComp';
 import HeaderComp from '../../Components/HeaderComp';
 import TextComp from '../../Components/TextComp';
 import OTPTextView from 'react-native-otp-textinput';
+import validator from '../../utils/validations';
+import { showError } from '../../utils/helperFunctions';
+import { otpVerify, userLogin } from '../../redux/actions/auth';
+import store from '../../redux/store';
+import { saveUserData } from '../../redux/reducers/auth';
+const {dispatch} = store
 
 // create a component
-const OtpVerification = ({ navigation }) => {
+const OtpVerification = ({ navigation, route }) => {
 
     const [timer, setTimer] = useState(60);
+    const [isLoading, setLoading] = useState(false)
+    const { data } = route?.params || {}
+
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -29,15 +37,46 @@ const OtpVerification = ({ navigation }) => {
     }, [timer])
 
     const [otpInput, setOtpInput] = useState("");
-    
+
     const input = useRef(null)
 
     const handleCellTextChange = async (text, i) => {
 
-      };
+    };
 
-      const onResendCode = () => {
+    const onResendCode = () => {
         setTimer(59)
+    }
+
+    const isValidData = () => {
+        const error = validator({
+            otp: otpInput
+        })
+        if (error) {
+            showError(error)
+            return false
+        }
+        return true
+    }
+
+    const onDone = async () => {
+
+        const checkValid = isValidData()
+        if (checkValid) {
+            setLoading(true)
+            let apiData = {
+                email: data.email,
+                otp: otpInput
+            }
+            try {
+                const res = await otpVerify(apiData, data.token )
+                setLoading(false)
+            } catch (error) {
+                console.log("error in login api", error);
+                showError(error?.error)
+                setLoading(false)
+            }
+        }
     }
 
     return (
@@ -77,7 +116,7 @@ const OtpVerification = ({ navigation }) => {
                         </View>
 
                         <View style={{ flex: 0.2, justifyContent: 'flex-end', marginBottom: moderateScaleVertical(16) }} >
-                        {timer > 0 ?
+                            {timer > 0 ?
                                 <TextComp style={{
                                     ...styles.descStyle,
                                     marginBottom: 12
@@ -90,7 +129,9 @@ const OtpVerification = ({ navigation }) => {
                                 <TextComp onPress={onResendCode} style={styles.resendCodeStyle} text={strings.RESEND_CODE} />
                             }
                             <ButtonComp
-                                text={strings.LOGIN} />
+                                text={strings.DONE}
+                                onPress={onDone} 
+                                isLoading={isLoading}/>
                         </View>
 
                     </View>
@@ -122,7 +163,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         color: colors.white
     },
-    
+
     resendCodeStyle: {
         fontSize: textScale(14),
         fontFamily: fontFamily.regular,

@@ -12,12 +12,15 @@ import HeaderComp from '../../Components/HeaderComp';
 import TextComp from '../../Components/TextComp';
 import { showError } from '../../utils/helperFunctions';
 import validator from '../../utils/validations';
+import { userLogin } from '../../redux/actions/auth';
+import navigationStrings from '../../Navigation/navigationStrings';
 
 // create a component
-const Login = () => {
+const Login = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [secureText, setSecureText] = useState(true)
+    const [isLoading, setLoading] = useState(false)
 
     const isValidData = () => {
         const error = validator({
@@ -31,19 +34,24 @@ const Login = () => {
         return true
     }
 
-    const onLogin = () => {
+    const onLogin = async () => {
 
         const checkValid = isValidData()
         if (checkValid) {
-            alert("hit api")
+            setLoading(true)
+            try {
+                const res = await userLogin({ email, password })
+                console.log("login api", res);
+                setLoading(false)
+                if (!!res.data && !res?.data?.validOTP) {
+                    navigation.navigate(navigationStrings.OTP_VERIFICATION, {data: res.data})
+                }
+            } catch (error) {
+                console.log("error in login api", error);
+                showError(error?.error)
+                setLoading(false)
+            }
         }
-
-        // if (email == '' ) {
-        //     showError('Please enter email')
-        // }
-        // if (password == '' ) {
-        //     showError('Please enter password')
-        // }
     }
 
     return (
@@ -89,7 +97,8 @@ const Login = () => {
                         <View style={{ flex: 0.2, justifyContent: 'flex-end', marginBottom: moderateScaleVertical(16) }} >
                             <ButtonComp
                                 text={strings.LOGIN}
-                                onPress={onLogin} />
+                                onPress={onLogin}
+                                isLoading={isLoading} />
                         </View>
 
                     </View>

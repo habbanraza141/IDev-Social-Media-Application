@@ -15,6 +15,11 @@ import TextInputComp from '../../Components/TextInputComp';
 import MultiTextInput from '../../Components/MultiTextInput';
 import ButtonComp from '../../Components/ButtonComp';
 import ModalComp from '../../Components/ModalComp';
+import store from '../../redux/store';
+import { saveUserData } from '../../redux/reducers/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showError } from '../../utils/helperFunctions';
+const { dispatch } = store;
 
 // create a component
 const ProfileEdit = ({ navigation }) => {
@@ -29,9 +34,19 @@ const ProfileEdit = ({ navigation }) => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [secureText, setSecureText] = useState(true)
     const [showPassModal, setShowPassModal] = useState(false)
-    
+
     const onSave = () => {
         alert("dfdf")
+    }
+
+    const onLogout = () =>{
+        AsyncStorage.removeItem('userData').then((res)=>{
+            console.log("user remove suceessfully..!!")
+            dispatch(saveUserData({}))
+        }).catch((error)=>{
+            showError("Data not found")
+        })
+
     }
 
 
@@ -107,6 +122,7 @@ const ProfileEdit = ({ navigation }) => {
 
                     <ButtonComp
                         text={strings.LOGOUT}
+                        onPress={onLogout}
                         style={{
                             backgroundColor: 'transparent',
                             borderWidth: 0.5,

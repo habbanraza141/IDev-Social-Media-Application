@@ -12,24 +12,66 @@ import HeaderComp from '../../Components/HeaderComp';
 import TextComp from '../../Components/TextComp';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import navigationStrings from '../../Navigation/navigationStrings';
+import validator from '../../utils/validations';
+import { showError } from '../../utils/helperFunctions';
+import { userSignup } from '../../redux/actions/auth';
 
 // create a component
-const Signup = ({navigation}) => {
+const Signup = ({ navigation }) => {
     const [userName, setUserName] = useState('')
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+    const [isLoading, setLoading] = useState(false)
     const [secureText, setSecureText] = useState(true)
 
-    const onPressSignup = () => {
-        navigation.navigate(navigationStrings.OTP_VERIFICATION)
+    const isValidData = () => {
+        const error = validator({
+            email,
+            password,
+            userName,
+            fullName
+        })
+        if (error) {
+            showError(error)
+            return false
+        }
+        return true
+    }
+
+    const onPressSignup = async () => {
+
+        const checkValid = isValidData()
+
+        if (checkValid) {
+            setLoading(true)
+
+            let data = {
+                userName: userName,
+                fullName: fullName,
+                email: email,
+                password: password,
+            }
+        try {
+            let res  = await userSignup(data)
+            console.log("res", res);
+            setLoading(false)
+            navigation.navigate(navigationStrings.OTP_VERIFICATION, {data: res.data})
+
+        } catch (error) {
+            console.log("error raised", error);
+            showError(error?.error || error?.message )
+            setLoading(false)
+
+        }
+
+        }
     }
     return (
         <WrapperContainer>
             <HeaderComp />
             <KeyboardAwareScrollView>
-                <View style={{  padding: moderateScale(16) }} >
+                <View style={{ padding: moderateScale(16) }} >
                     <View  >
                         <TextComp style={styles.headerStyle} text={strings.CREATE_NEW_ACCOUNT} > </TextComp>
                         <TextComp style={styles.descStyle} text={strings.CREATE_AN_ACCOUNT_SO_YOU_CAN_CONTINUE} > </TextComp>
@@ -60,22 +102,15 @@ const Signup = ({navigation}) => {
                             onPressSecure={() => setSecureText(!secureText)}
                         />
 
-                        <TextInputComp
-                            value={confirmPassword}
-                            placeholder={strings.CONFIRM_PASSWORD}
-                            onChangeText={(value) => setConfirmPassword(value)}
-                            secureTextEntry={secureText}
-                            secureText={secureText ? strings.SHOW : strings.HIDE}
-                            onPressSecure={() => setSecureText(!secureText)}
-                        />
-
 
 
                     </View>
-                        <ButtonComp
-                            onPress={onPressSignup}
-                            style={{marginVertical: moderateScaleVertical(52)}}
-                            text={strings.SIGN_UP} />
+                    <ButtonComp
+                        onPress={onPressSignup}
+                        style={{ marginVertical: moderateScaleVertical(52) }}
+                        text={strings.SIGN_UP}
+                        isLoading={isLoading}
+                       />
                 </View>
             </KeyboardAwareScrollView>
         </WrapperContainer>
